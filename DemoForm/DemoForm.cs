@@ -15,5 +15,16 @@ namespace DemoForm
         {
             InitializeComponent();
         }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            Application.Exit();
+        }
+
+        private void btnSubmit_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("点击了确定", "提示", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
     }
 }
