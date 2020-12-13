@@ -9,6 +9,8 @@ namespace WinApiTest.Core
 {
     public static class WinApi
     {
+        public delegate bool CallBack(IntPtr hwnd, int lParam);
+
         #region Dll Import
 
         // 获取第三方的windwo对象
@@ -17,24 +19,28 @@ namespace WinApiTest.Core
 
         // 获取子窗口对象
         [DllImport("user32.dll", EntryPoint = "FindWindowEx")]
-        public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass,
-            string lpszWindow);
+        public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
 
+        //  枚举所有子窗口
+        [DllImport("user32.dll")]
+        public static extern int EnumChildWindows(IntPtr hwndParent, CallBack lpEnumFunc, int lParam);
+
+        // 发送消息
         [DllImport("User32.dll", EntryPoint = "SendMessage")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, string lParam);
-
         [DllImport("User32.dll", EntryPoint = "SendMessage")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
         [DllImport("User32.dll", EntryPoint = "SendMessageA")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
         [DllImport("user32.dll", EntryPoint = "SendMessageA")]
         public static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, Byte[] lParam);
 
+        // 设置窗口位置
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         public static extern bool SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
 
-        [DllImport("user32", EntryPoint = "SetWindowText")]
+        // 设置窗口标题
+        [DllImport("user32.dll", EntryPoint = "SetWindowText")]
         public static extern int SetWindowText(IntPtr hwnd, string lpString);
 
 
@@ -50,10 +56,10 @@ namespace WinApiTest.Core
         [DllImport("user32.dll", EntryPoint = "GetWindow")]
         public static extern IntPtr GetWindow(IntPtr hwnd, int cmd);
 
-        [DllImport("user32", EntryPoint = "GetWindowText")]
+        [DllImport("user32.dll", EntryPoint = "GetWindowText")]
         public static extern int GetWindowText(IntPtr hwnd, StringBuilder lpString, int cch);
 
-        [DllImport("user32", EntryPoint = "GetWindowTextLength")]
+        [DllImport("user32.dll", EntryPoint = "GetWindowTextLength")]
         public static extern int GetWindowTextLength(IntPtr hwnd);
 
 
@@ -221,7 +227,7 @@ namespace WinApiTest.Core
             SetWindowPos(hWnd, -1, 0, 0, 0, 0, 0x4000 | 0x0001 | 0x0002);
         }
 
-        public static void SetWindowText1(IntPtr hWnd, string text)
+        public static void SetWindowTextSend(IntPtr hWnd, string text)
         {
             if (hWnd != IntPtr.Zero)
             {
